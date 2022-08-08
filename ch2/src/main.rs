@@ -3,11 +3,9 @@
 #![feature(naked_functions, asm_sym, asm_const)]
 #![deny(warnings)]
 
-
 /// Supervisor 汇编入口。
 ///
 /// 设置栈并跳转到 Rust。
-
 #[naked]
 #[no_mangle]
 #[link_section = ".text.entry"]
@@ -18,7 +16,6 @@ unsafe extern "C" fn _start() -> ! {
     static mut STACK: [u8; STACK_SIZE] = [0u8; STACK_SIZE];
 
     core::arch::asm!(
-
         "   la  sp, {stack}
             li  t0, {stack_size}
             add sp, sp, t0
@@ -27,7 +24,6 @@ unsafe extern "C" fn _start() -> ! {
         stack_size = const STACK_SIZE,
         stack      =   sym STACK,
         main       =   sym rust_main,
-
         options(noreturn),
     )
 }
@@ -44,7 +40,6 @@ extern "C" fn rust_main() -> ! {
     system_reset(RESET_TYPE_SHUTDOWN, RESET_REASON_NO_REASON);
     unreachable!()
 }
-
 
 /// Rust 异常处理函数，以异常方式关机。
 #[panic_handler]
